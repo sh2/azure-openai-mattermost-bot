@@ -1,2 +1,3 @@
 # azure-openai-mattermost-bot
-Azure OpenAI Serviceをバックエンドに利用するMattermost Botです。
+
+This is a Mattermost Bot that uses Azure OpenAI Service as its backend.
