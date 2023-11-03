@@ -2,7 +2,7 @@
 
 podman run \
         --detach \
-        --restart=on-failure \
+        --restart=always \
         --env=MATTERMOST_URL=http://127.0.0.1 \
         --env=MATTERMOST_PORT=8065 \
         --env=MATTERMOST_API_PATH=/api/v4 \
