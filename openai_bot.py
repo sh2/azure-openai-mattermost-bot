@@ -11,10 +11,10 @@ from mmpy_bot import Bot, Message, Plugin, Settings, listen_to
 from openai.openai_object import OpenAIObject
 from typing import cast
 
-log = logging.getLogger("chat_bot")
+log = logging.getLogger("openai_bot")
 
 
-class ChatBot(Plugin):
+class OpenAIBot(Plugin):
     azure_openai_deployment = os.environ.get(
         "AZURE_OPENAI_DEPLOYMENT", "deploy1")
 
@@ -99,7 +99,7 @@ class ChatBot(Plugin):
 
             # Call OpenAI's API.
             response = openai.ChatCompletion.create(
-                deployment_id=ChatBot.azure_openai_deployment, messages=requestMessages)
+                deployment_id=OpenAIBot.azure_openai_deployment, messages=requestMessages)
 
             response = cast(OpenAIObject, response)
             log.info("API Response: " +
@@ -192,5 +192,5 @@ class ChatBot(Plugin):
 
 
 if __name__ == "__main__":
-    bot = Bot(settings=Settings(), plugins=[ChatBot()])
+    bot = Bot(settings=Settings(), plugins=[OpenAIBot()])
     bot.run()
