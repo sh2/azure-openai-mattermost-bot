@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10-alpine
 ENV PYTHONUNBUFFERED=1
 WORKDIR /usr/src/app
 COPY chat_bot.py requirements.txt ./
