@@ -15,9 +15,9 @@ $ cd azure-openai-mattermost-bot
 $ python3 -m venv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
-$ cp start_template.sh start.sh
-$ vim start.sh
-$ ./start.sh
+$ cp template_script.sh script.sh
+$ vim script.sh
+$ ./script.sh
 ```
 
 The following is the setup instructions for building a Podman/Docker container.
@@ -26,7 +26,7 @@ The following is the setup instructions for building a Podman/Docker container.
 $ git clone https://github.com/sh2/azure-openai-mattermost-bot.git
 $ cd azure-openai-mattermost-bot
 $ podman build -t openai-bot .
-$ cp container_template.sh container.sh
+$ cp template_container.sh container.sh
 $ vim container.sh
 $ ./container.sh
 ```
