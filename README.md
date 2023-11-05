@@ -34,7 +34,7 @@ $ ./container.sh
 ## Config
 
 Set the following environment variables.
-Please refer to `start_template.sh` and `container_template.sh`.
+Please refer to `template_script.sh` and `template_container.sh`.
 
 | Name | Required | Example |
 | ---- | ---- | ---- |
