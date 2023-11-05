@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim
 ENV PYTHONUNBUFFERED=1
 WORKDIR /usr/src/app
 COPY openai_bot.py requirements.txt ./
