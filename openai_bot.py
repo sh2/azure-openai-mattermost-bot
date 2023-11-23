@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import threading
+import time
 import traceback
 import websocket
 
@@ -107,16 +108,48 @@ class OpenAIBot(Plugin):
             self.send_typing(ws)
 
             # Call OpenAI's API.
-            response = self.openai.chat.completions.create(
+            completion = self.openai.chat.completions.create(
                 messages=requestMessages,
-                model=OpenAIBot.azure_openai_deployment
+                model=OpenAIBot.azure_openai_deployment,
+                stream=True
             )
 
-            if response.choices[0].message.content:
-                log.info("API Response: " +
-                         json.dumps(response.choices[0].message.content, ensure_ascii=False))
-                self.driver.reply_to(
-                    message, response.choices[0].message.content)
+            # Reply with an empty message and update with stream data.
+            reply = self.driver.reply_to(message, "")
+            reply_id = reply["id"]
+            reply_chunks = []
+            last_time = time.time()
+
+            for chunk in completion:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    reply_chunks.append(chunk.choices[0].delta.content)
+                    current_time = time.time()
+
+                    # Stores stream data for one second before outputting it.
+                    if last_time + 1.0 <= current_time:
+                        last_time = current_time
+                        reply_message = "".join(reply_chunks)
+                        reply_chunks = [reply_message]
+
+                        self.driver.posts.update_post(  # type:ignore
+                            post_id=reply_id,
+                            options={
+                                "id": reply_id,
+                                "message": reply_message
+                            }
+                        )
+
+            # Update again with the last set of data.
+            reply_message = "".join(reply_chunks)
+            log.info("API Response: " + reply_message)
+
+            self.driver.posts.update_post(  # type:ignore
+                post_id=reply_id,
+                options={
+                    "id": reply_id,
+                    "message": reply_message
+                }
+            )
         except Exception:
             stacktrace = traceback.format_exc()
             log.error(f"Exception:\n{stacktrace}")
@@ -198,7 +231,7 @@ class OpenAIBot(Plugin):
 
         ws.send(json.dumps(self.websocket_typing))
         if self.is_typing:
-            threading.Timer(2.0, self.send_typing, args=[ws]).start()
+            threading.Timer(1.0, self.send_typing, args=[ws]).start()
         else:
             ws.close()
 
