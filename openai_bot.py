@@ -1,6 +1,6 @@
+import httpx
 import json
 import logging
-import openai
 import os
 import re
 import threading
@@ -8,8 +8,7 @@ import traceback
 import websocket
 
 from mmpy_bot import Bot, Message, Plugin, Settings, listen_to
-from openai.openai_object import OpenAIObject
-from typing import cast
+from openai import AzureOpenAI
 
 log = logging.getLogger("openai_bot")
 
@@ -20,16 +19,26 @@ class OpenAIBot(Plugin):
 
     def __init__(self):
         # Azure OpenAI Service
-        openai.api_type = "azure"
-        openai.api_base = f"https://{os.environ.get('AZURE_OPENAI_SERVICE', 'openai1')}.openai.azure.com"
+        openai_endpoint = f"https://{os.environ.get('AZURE_OPENAI_SERVICE', 'openai1')}.openai.azure.com"
 
         # List of API Versions
         # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
-        openai.api_version = os.environ.get(
+        openai_api_version = os.environ.get(
             "AZURE_OPENAI_API_VERSION", "2023-08-01-preview")
 
-        openai.api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
-        openai.proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
+        openai_api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
+        openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
+        http_client = None
+
+        if openai_proxy:
+            http_client = httpx.Client(proxies=openai_proxy)
+
+        self.openai = AzureOpenAI(
+            azure_endpoint=openai_endpoint,
+            api_version=openai_api_version,
+            api_key=openai_api_key,
+            http_client=http_client
+        )
 
         # Mattermost
         self.is_typing = True
@@ -98,13 +107,16 @@ class OpenAIBot(Plugin):
             self.send_typing(ws)
 
             # Call OpenAI's API.
-            response = openai.ChatCompletion.create(
-                deployment_id=OpenAIBot.azure_openai_deployment, messages=requestMessages)
+            response = self.openai.chat.completions.create(
+                messages=requestMessages,
+                model=OpenAIBot.azure_openai_deployment
+            )
 
-            response = cast(OpenAIObject, response)
-            log.info("API Response: " +
-                     json.dumps(response.choices[0].message, ensure_ascii=False))
-            self.driver.reply_to(message, response.choices[0].message.content)
+            if response.choices[0].message.content:
+                log.info("API Response: " +
+                         json.dumps(response.choices[0].message.content, ensure_ascii=False))
+                self.driver.reply_to(
+                    message, response.choices[0].message.content)
         except Exception:
             stacktrace = traceback.format_exc()
             log.error(f"Exception:\n{stacktrace}")
