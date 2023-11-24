@@ -8,7 +8,14 @@ import time
 import traceback
 import websocket
 
-from mmpy_bot import Bot, Message, Plugin, Settings, listen_to
+from mmpy_bot import (
+    Bot,
+    Message,
+    Plugin,
+    Settings,
+    listen_to
+)
+
 from openai import AzureOpenAI
 
 log = logging.getLogger("openai_bot")
@@ -20,14 +27,6 @@ class OpenAIBot(Plugin):
 
     def __init__(self):
         # Azure OpenAI Service
-        openai_endpoint = f"https://{os.environ.get('AZURE_OPENAI_SERVICE', 'openai1')}.openai.azure.com"
-
-        # List of API Versions
-        # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
-        openai_api_version = os.environ.get(
-            "AZURE_OPENAI_API_VERSION", "2023-08-01-preview")
-
-        openai_api_key = os.environ.get("AZURE_OPENAI_API_KEY", "")
         openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
         http_client = None
 
@@ -35,9 +34,14 @@ class OpenAIBot(Plugin):
             http_client = httpx.Client(proxies=openai_proxy)
 
         self.openai = AzureOpenAI(
-            azure_endpoint=openai_endpoint,
-            api_version=openai_api_version,
-            api_key=openai_api_key,
+            azure_endpoint=f"https://{os.environ.get('AZURE_OPENAI_SERVICE', 'openai1')}.openai.azure.com",
+
+            # List of API Versions
+            # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
+            api_version=os.environ.get(
+                "AZURE_OPENAI_API_VERSION", "2023-08-01-preview"),
+
+            api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
             http_client=http_client
         )
 
