@@ -26,6 +26,8 @@ class OpenAIBot(Plugin):
         "AZURE_OPENAI_DEPLOYMENT", "deploy1")
 
     def __init__(self):
+        super().__init__()
+
         # Azure OpenAI Service
         openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
         http_client = None
@@ -64,8 +66,6 @@ class OpenAIBot(Plugin):
                 "parent_id": ""
             }
         }
-
-        super().__init__()
 
     @listen_to("")
     def respond(self, message: Message):
