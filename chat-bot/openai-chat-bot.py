@@ -18,7 +18,7 @@ from mmpy_bot import (
 
 from openai import AzureOpenAI
 
-log = logging.getLogger("openai_bot")
+log = logging.getLogger("openai-chat-bot")
 
 
 class ChatBot(Plugin):
