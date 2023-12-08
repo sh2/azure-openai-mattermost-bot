@@ -57,7 +57,17 @@ Mention the bot and it will respond with a thread.
 If you reply to the thread, you can continue the conversation.
 You do not need to re-mention the bot at this time.
 
-![Sample](sample_chat.png)
+![Chat Sample](sample_chat.png)
+
+## Image Bot
+
+The image-bot directory contains the source code for the image generation bot.
+The setup procedure and configurations are the same as for the chat-bot.
+When you mentions to the bot, it generates an image and replies.
+Unlike chat-bot, it is not possible to continue a conversation in a thread.
+Currently only DALL-E 3 model is supported.
+
+![Image Sample](sample_image.png)
 
 ## License
 
