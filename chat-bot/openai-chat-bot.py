@@ -21,7 +21,7 @@ from openai import AzureOpenAI
 log = logging.getLogger("openai_bot")
 
 
-class OpenAIBot(Plugin):
+class ChatBot(Plugin):
     azure_openai_deployment = os.environ.get(
         "AZURE_OPENAI_DEPLOYMENT", "deploy1")
 
@@ -114,7 +114,7 @@ class OpenAIBot(Plugin):
             # Call OpenAI's API.
             completion = self.openai.chat.completions.create(
                 messages=requestMessages,
-                model=OpenAIBot.azure_openai_deployment,
+                model=ChatBot.azure_openai_deployment,
                 stream=True
             )
 
@@ -241,5 +241,5 @@ class OpenAIBot(Plugin):
 
 
 if __name__ == "__main__":
-    bot = Bot(settings=Settings(), plugins=[OpenAIBot()])
+    bot = Bot(settings=Settings(), plugins=[ChatBot()])
     bot.run()

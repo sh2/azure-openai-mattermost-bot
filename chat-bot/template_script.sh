@@ -13,4 +13,4 @@ export AZURE_OPENAI_API_VERSION=
 export AZURE_OPENAI_API_KEY=
 export AZURE_OPENAI_PROXY=
 
-python3 openai_bot.py
+python3 openai-chat-bot.py

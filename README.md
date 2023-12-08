@@ -25,7 +25,7 @@ The following is the setup instructions for building a Podman/Docker container.
 ```
 $ git clone https://github.com/sh2/azure-openai-mattermost-bot.git
 $ cd azure-openai-mattermost-bot/chat-bot
-$ podman build -t openai-bot .
+$ podman build -t openai-chat-bot .
 $ cp template_container.sh container.sh
 $ vim container.sh
 $ ./container.sh
