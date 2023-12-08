@@ -11,7 +11,7 @@ The following is the setup procedure for launching Python scripts directly.
 
 ```
 $ git clone https://github.com/sh2/azure-openai-mattermost-bot.git
-$ cd azure-openai-mattermost-bot
+$ cd azure-openai-mattermost-bot/chat-bot
 $ python3 -m venv .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
@@ -24,7 +24,7 @@ The following is the setup instructions for building a Podman/Docker container.
 
 ```
 $ git clone https://github.com/sh2/azure-openai-mattermost-bot.git
-$ cd azure-openai-mattermost-bot
+$ cd azure-openai-mattermost-bot/chat-bot
 $ podman build -t openai-bot .
 $ cp template_container.sh container.sh
 $ vim container.sh
@@ -57,7 +57,7 @@ Mention the bot and it will respond with a thread.
 If you reply to the thread, you can continue the conversation.
 You do not need to re-mention the bot at this time.
 
-![Sample](img/sample.png)
+![Sample](sample_chat.png)
 
 ## License
 
