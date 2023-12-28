@@ -139,7 +139,7 @@ class ChatBot(Plugin):
                             post_id=reply_id,
                             options={
                                 "id": reply_id,
-                                "message": reply_message
+                                "message": reply_message + "▌"
                             }
                         )
 
