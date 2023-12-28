@@ -198,16 +198,23 @@ class ChatBot(Plugin):
         based on the content of the thread.
         """
 
+        if self.driver is None:
+            raise ValueError("self.driver is None")
+
         requestMessages = [{"role": "system", "content": system_prompt}]
 
         for post_id in thread["order"]:
             post = thread["posts"][post_id]
+
             if post["user_id"] == bot_id:
                 requestMessages.append(
                     {"role": "assistant", "content": post["message"]})
             else:
-                requestMessages.append(
-                    {"role": "user", "content": post["message"]})
+                # Remove mentions of the bot.
+                message = post["message"].replace(
+                    "@" + self.driver.username, "")
+
+                requestMessages.append({"role": "user", "content": message})
 
         return requestMessages
 
