@@ -172,21 +172,19 @@ class ChatBot(Plugin):
             raise ValueError("self.driver is None")
 
         # To prevent bots from talking to each other,
-        # do not reply to statements by users beginning with "ai-".
+        # do not reply to messages by users beginning with "ai-".
         if sender_name.startswith("ai-"):
             return False
 
         # Reply to any mentions of the bot in the thread.
-        # I couldn't find a function to extract mentions in mmmpy_bot,
-        # so I decided to analyze it by myself.
-        pattern = r"(^|\s)@([a-z0-9\.\-_]+)(?=$|\s)"
+        # I couldn't find a function to extract mentions in mmpy_bot,
+        # so I extracted them on my own.
+        # username regex pattern: @([a-z0-9\.\-_]+)
+        username_escaped = self.driver.username.replace(".", "\\.")
+        pattern = fr"(^|\s)@{username_escaped}(?=$|\s)"
 
         for post_id in thread["order"]:
-            post = thread["posts"][post_id]
-            matches = re.findall(pattern, post["message"])
-            usernames = [match[1] for match in matches]
-
-            if self.driver.username in usernames:
+            if re.search(pattern, thread["posts"][post_id]["message"]):
                 return True
 
         # If the conditions up to this point are not met, the bot will not reply.
