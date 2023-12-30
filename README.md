@@ -44,7 +44,7 @@ Please refer to `template_script.sh` and `template_container.sh`.
 | BOT_TOKEN | yes | xxxxxxxx |
 | AZURE_OPENAI_SERVICE | yes | openai1 |
 | AZURE_OPENAI_DEPLOYMENT | yes | deploy1 |
-| AZURE_OPENAI_API_VERSION | yes | 2023-08-01-preview |
+| AZURE_OPENAI_API_VERSION | yes | 2023-12-01-preview |
 | AZURE_OPENAI_API_KEY | yes | yyyyyyyy |
 | AZURE_OPENAI_PROXY | no | http://proxy.example.com:8080 |
 
