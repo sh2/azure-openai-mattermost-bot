@@ -4,6 +4,8 @@ import io
 import json
 import logging
 import os
+import signal
+import sys
 import tempfile
 import threading
 import traceback
@@ -21,6 +23,11 @@ from openai import AzureOpenAI
 from PIL import Image
 
 log = logging.getLogger("openai-image-bot")
+
+
+def handler(signum, frame):
+    print(f"Signal {signum} received.")
+    sys.exit(0)
 
 
 class ImageBot(Plugin):
@@ -155,5 +162,6 @@ class ImageBot(Plugin):
 
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, handler)
     bot = Bot(settings=Settings(), plugins=[ImageBot()])
     bot.run()
