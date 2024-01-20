@@ -2,6 +2,8 @@ import httpx
 import json
 import logging
 import os
+import signal
+import sys
 import re
 import threading
 import time
@@ -19,6 +21,11 @@ from mmpy_bot import (
 from openai import AzureOpenAI
 
 log = logging.getLogger("openai-chat-bot")
+
+
+def handler(signum, frame):
+    print(f"Signal {signum} received.")
+    sys.exit(0)
 
 
 class ChatBot(Plugin):
@@ -246,5 +253,6 @@ class ChatBot(Plugin):
 
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, handler)
     bot = Bot(settings=Settings(), plugins=[ChatBot()])
     bot.run()
