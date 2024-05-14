@@ -18,7 +18,7 @@ from mmpy_bot import (
     listen_to
 )
 
-from openai import AzureOpenAI
+from openai import AzureOpenAI, OpenAI
 
 log = logging.getLogger("openai-chat-bot")
 
@@ -29,30 +29,39 @@ def handler(signum, frame):
 
 
 class ChatBot(Plugin):
-    azure_openai_deployment = os.environ.get(
+    openai_deployment = os.environ.get(
         "AZURE_OPENAI_DEPLOYMENT", "deploy1")
 
     def __init__(self):
         super().__init__()
 
         # Azure OpenAI Service
-        openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
         http_client = None
+        openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
+        openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
 
         if openai_proxy:
             http_client = httpx.Client(proxies=openai_proxy)
 
-        self.openai = AzureOpenAI(
-            azure_endpoint=f"https://{os.environ.get('AZURE_OPENAI_SERVICE', 'openai1')}.openai.azure.com",
+        if openai_service:
+            # If the environment variable AZURE_OPENAI_SERVICE is defined, use Azure OpenAI.
+            self.openai = AzureOpenAI(
+                azure_endpoint=f"https://{openai_service}.openai.azure.com",
 
-            # List of API Versions
-            # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
-            api_version=os.environ.get(
-                "AZURE_OPENAI_API_VERSION", "2023-12-01-preview"),
+                # List of API Versions
+                # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
+                api_version=os.environ.get(
+                    "AZURE_OPENAI_API_VERSION", "2024-02-01"),
 
-            api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
-            http_client=http_client
-        )
+                api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
+                http_client=http_client
+            )
+        else:
+            # If the environment variable AZURE_OPENAI_SERVICE is not defined, use OpenAI.
+            self.openai = OpenAI(
+                api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
+                http_client=http_client
+            )
 
         # Mattermost
         self.is_typing = True
@@ -121,7 +130,7 @@ class ChatBot(Plugin):
             # Call OpenAI's API.
             completion = self.openai.chat.completions.create(
                 messages=requestMessages,
-                model=ChatBot.azure_openai_deployment,
+                model=ChatBot.openai_deployment,
                 stream=True
             )
 

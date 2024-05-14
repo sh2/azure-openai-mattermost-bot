@@ -48,6 +48,9 @@ Please refer to `template_script.sh` and `template_container.sh`.
 | AZURE_OPENAI_API_KEY | yes | yyyyyyyy |
 | AZURE_OPENAI_PROXY | no | http://proxy.example.com:8080 |
 
+If AZURE_OPENAI_SERVICE is undefined, OpenAI API will be used instead of Azure OpenAI Service.
+In that case, specify the model name in AZURE_OPENAI_DEPLOYMENT and do not specify anything in AZURE_OPENAI_API_VERSION.
+
 ## Usage
 
 The bot uses the channel header as a system prompt.
