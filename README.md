@@ -44,12 +44,12 @@ Please refer to `template_script.sh` and `template_container.sh`.
 | BOT_TOKEN | yes | xxxxxxxx |
 | AZURE_OPENAI_SERVICE | yes | openai1 |
 | AZURE_OPENAI_DEPLOYMENT | yes | deploy1 |
-| AZURE_OPENAI_API_VERSION | yes | 2023-12-01-preview |
+| AZURE_OPENAI_API_VERSION | yes | 2024-02-01 |
 | AZURE_OPENAI_API_KEY | yes | yyyyyyyy |
 | AZURE_OPENAI_PROXY | no | http://proxy.example.com:8080 |
 
 If AZURE_OPENAI_SERVICE is undefined, OpenAI API will be used instead of Azure OpenAI Service.
-In that case, specify the model name in AZURE_OPENAI_DEPLOYMENT and do not specify anything in AZURE_OPENAI_API_VERSION.
+In that case, specify the model name in AZURE_OPENAI_DEPLOYMENT.
 
 ## Usage
 
@@ -75,4 +75,4 @@ Currently only DALL-E 3 model is supported.
 ## License
 
 MIT License  
-Copyright (c) 2023 Sadao Hiratsuka
+Copyright (c) 2023-2024 Sadao Hiratsuka
