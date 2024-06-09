@@ -13,4 +13,4 @@ podman run \
         --env=AZURE_OPENAI_API_KEY= \
         --env=AZURE_OPENAI_PROXY= \
         --name=openai-image-bot \
-        openai-image-bot:latest
+        openai-image-bot:20240101

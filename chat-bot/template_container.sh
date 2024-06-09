@@ -13,4 +13,4 @@ podman run \
         --env=AZURE_OPENAI_API_KEY= \
         --env=AZURE_OPENAI_PROXY= \
         --name=openai-chat-bot \
-        openai-chat-bot:latest
+        openai-chat-bot:20240101
