@@ -50,7 +50,7 @@ class ChatBot(Plugin):
                 # List of API Versions
                 # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
                 api_version=os.environ.get(
-                    "AZURE_OPENAI_API_VERSION") or "2024-02-01",
+                    "AZURE_OPENAI_API_VERSION") or "2024-06-01",
 
                 api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
                 http_client=http_client
