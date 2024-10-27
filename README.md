@@ -72,6 +72,15 @@ Currently only DALL-E 3 model is supported.
 
 ![Image Sample](sample_image.png)
 
+## Note
+
+There is a bug that does not work with mmpy-bot 2.2.0 and is under investigation.
+Please use mmpy-bot 2.1.4 for the time being.
+
+```bash
+pip install httpx[socks] websocket-client openai 'mmpy-bot<2.2.0'
+```
+
 ## License
 
 MIT License  
