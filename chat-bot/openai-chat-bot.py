@@ -40,7 +40,7 @@ class ChatBot(Plugin):
         openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
 
         if openai_proxy:
-            http_client = httpx.Client(proxies=openai_proxy)
+            http_client = httpx.Client(proxy=openai_proxy)
 
         if openai_service:
             # If the environment variable AZURE_OPENAI_SERVICE is defined, use Azure OpenAI.
