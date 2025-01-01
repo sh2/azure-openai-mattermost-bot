@@ -36,13 +36,15 @@ class ImageBot(Plugin):
     def __init__(self):
         super().__init__()
 
-        # Azure OpenAI Service
+        # Proxy settings
         http_client = None
         openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
-        openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
 
         if openai_proxy:
             http_client = httpx.Client(proxy=openai_proxy)
+
+        # Azure OpenAI Service
+        openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
 
         if openai_service:
             # If the environment variable AZURE_OPENAI_SERVICE is defined, use Azure OpenAI.
@@ -50,9 +52,9 @@ class ImageBot(Plugin):
                 azure_endpoint=f"https://{openai_service}.openai.azure.com",
 
                 # List of API Versions
-                # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
+                # https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#image-generation
                 api_version=os.environ.get(
-                    "AZURE_OPENAI_API_VERSION") or "2024-06-01",
+                    "AZURE_OPENAI_API_VERSION") or "2024-10-21",
 
                 api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
                 http_client=http_client
