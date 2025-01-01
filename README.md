@@ -43,8 +43,9 @@ Please refer to `template_script.sh` and `template_container.sh`.
 | MATTERMOST_API_PATH | yes | /api/v4 |
 | BOT_TOKEN | yes | xxxxxxxx |
 | AZURE_OPENAI_SERVICE | yes | openai1 |
+| AZURE_OPENAI_BASE_URL | no | <https://api.example.com> |
 | AZURE_OPENAI_DEPLOYMENT | yes | deploy1 |
-| AZURE_OPENAI_API_VERSION | yes | 2024-06-01 |
+| AZURE_OPENAI_API_VERSION | no | 2024-10-21 |
 | AZURE_OPENAI_API_KEY | yes | yyyyyyyy |
 | AZURE_OPENAI_PROXY | no | <http://proxy.example.com:8080> |
 
@@ -75,4 +76,4 @@ Currently only DALL-E 3 model is supported.
 ## License
 
 MIT License  
-Copyright (c) 2023-2024 Sadao Hiratsuka
+Copyright (c) 2023-2025 Sadao Hiratsuka

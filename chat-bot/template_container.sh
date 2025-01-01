@@ -8,6 +8,7 @@ podman run \
         --env=MATTERMOST_API_PATH=/api/v4 \
         --env=BOT_TOKEN= \
         --env=AZURE_OPENAI_SERVICE= \
+        --env=AZURE_OPENAI_BASE_URL= \
         --env=AZURE_OPENAI_DEPLOYMENT= \
         --env=AZURE_OPENAI_API_VERSION= \
         --env=AZURE_OPENAI_API_KEY= \

@@ -34,13 +34,18 @@ class ChatBot(Plugin):
     def __init__(self):
         super().__init__()
 
-        # Azure OpenAI Service
+        # Proxy settings
         http_client = None
         openai_proxy = os.environ.get("AZURE_OPENAI_PROXY", "")
-        openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
 
         if openai_proxy:
             http_client = httpx.Client(proxy=openai_proxy)
+
+        # Azure OpenAI Service
+        openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
+
+        # OpenAI Compatible Service
+        openai_base_url = os.environ.get("AZURE_OPENAI_BASE_URL", "")
 
         if openai_service:
             # If the environment variable AZURE_OPENAI_SERVICE is defined, use Azure OpenAI.
@@ -50,13 +55,20 @@ class ChatBot(Plugin):
                 # List of API Versions
                 # https://learn.microsoft.com/en-US/azure/ai-services/openai/reference#chat-completions
                 api_version=os.environ.get(
-                    "AZURE_OPENAI_API_VERSION") or "2024-06-01",
+                    "AZURE_OPENAI_API_VERSION") or "2024-10-21",
 
                 api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
                 http_client=http_client
             )
+        elif openai_base_url:
+            # If the environment variable OPENAI_BASE_URL is defined, use OpenAI Compatible Service.
+            self.openai = OpenAI(
+                base_url=openai_base_url,
+                api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
+                http_client=http_client
+            )
         else:
-            # If the environment variable AZURE_OPENAI_SERVICE is not defined, use OpenAI.
+            # If neither is defined, use the OpenAI API
             self.openai = OpenAI(
                 api_key=os.environ.get("AZURE_OPENAI_API_KEY", ""),
                 http_client=http_client
