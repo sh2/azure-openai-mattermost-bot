@@ -29,8 +29,6 @@ def handler(signum, frame):
 
 
 class ChatBot(Plugin):
-    openai_deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "")
-
     def __init__(self):
         super().__init__()
 
@@ -43,6 +41,9 @@ class ChatBot(Plugin):
 
         # Azure OpenAI Service
         openai_service = os.environ.get("AZURE_OPENAI_SERVICE", "")
+        self.openai_deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "")
+        self.openai_skip_system_prompt = os.environ.get(
+            "AZURE_OPENAI_SKIP_SYSTEM_PROMPT", "false").lower() in ["true", "yes", "1"]
 
         # OpenAI Compatible Service
         openai_base_url = os.environ.get("AZURE_OPENAI_BASE_URL", "")
@@ -141,7 +142,7 @@ class ChatBot(Plugin):
             # Call OpenAI's API.
             completion = self.openai.chat.completions.create(
                 messages=requestMessages,
-                model=ChatBot.openai_deployment,
+                model=self.openai_deployment,
                 stream=True
             )
 
@@ -226,7 +227,10 @@ class ChatBot(Plugin):
         if self.driver is None:
             raise ValueError("self.driver is None")
 
-        requestMessages = [{"role": "system", "content": system_prompt}]
+        if self.openai_skip_system_prompt:
+            requestMessages = []
+        else:
+            requestMessages = [{"role": "system", "content": system_prompt}]
 
         for post_id in thread["order"]:
             post = thread["posts"][post_id]
