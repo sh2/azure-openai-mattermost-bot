@@ -36,19 +36,20 @@ vim container.sh
 Set the following environment variables.
 Please refer to `template_script.sh` and `template_container.sh`.
 
-| Name | Required | Example |
-| ---- | ---- | ---- |
-| MATTERMOST_URL | yes | <http://mattermost.example.com> |
-| MATTERMOST_PORT | yes | 8065 |
-| MATTERMOST_API_PATH | yes | /api/v4 |
-| BOT_TOKEN | yes | xxxxxxxx |
-| AZURE_OPENAI_SERVICE | yes | openai1 |
-| AZURE_OPENAI_BASE_URL | no | <https://api.example.com> |
-| AZURE_OPENAI_DEPLOYMENT | yes | deploy1 |
-| AZURE_OPENAI_API_VERSION | no | 2024-10-21 |
-| AZURE_OPENAI_API_KEY | yes | yyyyyyyy |
-| AZURE_OPENAI_PROXY | no | <http://proxy.example.com:8080> |
-| AZURE_OPENAI_SKIP_SYSTEM_PROMPT | no | true |
+| Name | Required | Default | Example |
+| ---- | ---- | ---- | ---- |
+| MATTERMOST_URL | yes | | <http://mattermost.example.com> |
+| MATTERMOST_PORT | yes | | 8065 |
+| MATTERMOST_API_PATH | yes | | /api/v4 |
+| BOT_TOKEN | yes | | xxxxxxxx |
+| AZURE_OPENAI_SERVICE | no | | openai1 |
+| AZURE_OPENAI_BASE_URL | no | | <https://api.example.com> |
+| AZURE_OPENAI_DEPLOYMENT | yes | | deploy1 |
+| AZURE_OPENAI_API_VERSION | no | 2024-10-21 | 2024-10-21 |
+| AZURE_OPENAI_API_KEY | yes | | yyyyyyyy |
+| AZURE_OPENAI_PROXY | no | | <http://proxy.example.com:8080> |
+| AZURE_OPENAI_SKIP_SYSTEM_PROMPT | no | false | true |
+| AZURE_OPENAI_STREAM | no | true | false |
 
 If AZURE_OPENAI_SERVICE is undefined, OpenAI API will be used instead of Azure OpenAI Service.
 In that case, specify the model name in AZURE_OPENAI_DEPLOYMENT.

@@ -44,6 +44,8 @@ class ChatBot(Plugin):
         self.openai_deployment = os.environ.get("AZURE_OPENAI_DEPLOYMENT", "")
         self.openai_skip_system_prompt = os.environ.get(
             "AZURE_OPENAI_SKIP_SYSTEM_PROMPT", "false").lower() in ["true", "yes", "1"]
+        self.openai_stream = os.environ.get(
+            "AZURE_OPENAI_STREAM", "true").lower() not in ["false", "no", "0"]
 
         # OpenAI Compatible Service
         openai_base_url = os.environ.get("AZURE_OPENAI_BASE_URL", "")
@@ -139,49 +141,62 @@ class ChatBot(Plugin):
             ws.send(json.dumps(self.websocket_auth))
             self.send_typing(ws)
 
-            # Call OpenAI's API.
-            completion = self.openai.chat.completions.create(
-                messages=requestMessages,
-                model=self.openai_deployment,
-                stream=True
-            )
+            if self.openai_stream:
+                # Stream mode
+                completion = self.openai.chat.completions.create(
+                    messages=requestMessages,
+                    model=self.openai_deployment,
+                    stream=True
+                )
 
-            # Reply with an empty message and update with stream data.
-            reply = self.driver.reply_to(message, "")
-            reply_id = reply["id"]
-            reply_chunks = []
-            last_time = time.time()
+                # Reply with an empty message and update with stream data.
+                reply = self.driver.reply_to(message, "")
+                reply_id = reply["id"]
+                reply_chunks = []
+                last_time = time.time()
 
-            for chunk in completion:
-                if chunk.choices and chunk.choices[0].delta.content:
-                    reply_chunks.append(chunk.choices[0].delta.content)
-                    current_time = time.time()
+                for chunk in completion:
+                    if chunk.choices and chunk.choices[0].delta.content:
+                        reply_chunks.append(chunk.choices[0].delta.content)
+                        current_time = time.time()
 
-                    # Stores stream data for one second before outputting it.
-                    if last_time + 1.0 <= current_time:
-                        last_time = current_time
-                        reply_message = "".join(reply_chunks)
-                        reply_chunks = [reply_message]
+                        # Stores stream data for one second before outputting it.
+                        if last_time + 1.0 <= current_time:
+                            last_time = current_time
+                            reply_message = "".join(reply_chunks)
+                            reply_chunks = [reply_message]
 
-                        self.driver.posts.update_post(  # type:ignore
-                            post_id=reply_id,
-                            options={
-                                "id": reply_id,
-                                "message": reply_message + "▌"
-                            }
-                        )
+                            self.driver.posts.update_post(  # type:ignore
+                                post_id=reply_id,
+                                options={
+                                    "id": reply_id,
+                                    "message": reply_message + "▌"
+                                }
+                            )
 
-            # Update again with the last set of data.
-            reply_message = "".join(reply_chunks)
-            log.info("API Response: " + reply_message)
+                # Update again with the last set of data.
+                reply_message = "".join(reply_chunks)
+                log.info("API Response: " + reply_message)
 
-            self.driver.posts.update_post(  # type:ignore
-                post_id=reply_id,
-                options={
-                    "id": reply_id,
-                    "message": reply_message
-                }
-            )
+                self.driver.posts.update_post(  # type:ignore
+                    post_id=reply_id,
+                    options={
+                        "id": reply_id,
+                        "message": reply_message
+                    }
+                )
+            else:
+                # Non-stream mode
+                completion = self.openai.chat.completions.create(
+                    messages=requestMessages,
+                    model=self.openai_deployment,
+                    stream=False
+                )
+
+                if completion.choices[0].message.content:
+                    reply_message = completion.choices[0].message.content
+                    log.info("API Response: " + reply_message)
+                    self.driver.reply_to(message, reply_message)
         except Exception:
             stacktrace = traceback.format_exc()
             log.error(f"Exception:\n{stacktrace}")
